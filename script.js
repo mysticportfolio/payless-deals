@@ -10,22 +10,26 @@ navButtons.forEach(button => {
     sections.forEach(section => section.style.display = 'none');
     
     const targetSection = button.getAttribute('data-section');
-    document.getElementById(targetSection).style.display = 'block';
+    const targetEl = document.getElementById(targetSection);
+    if (targetEl) targetEl.style.display = 'block';
   });
 });
 
 // Show dashboard by default
-document.getElementById('dashboard').style.display = 'block';
+const dashboard = document.getElementById('dashboard');
+if (dashboard) dashboard.style.display = 'block';
 
-// VEHICLE LOGIC STARTS HERE
-const addVehicleBtn = document.getElementById('add-vehicle-btn');
-const vehicleForm = document.getElementById('vehicle-form');
-const vehicleList = document.getElementById('vehicle-list');
-const cancelBtn = document.getElementById('cancel-vehicle');
+// VEHICLE MODAL LOGIC - matches your HTML IDs
+const addVehicleBtn = document.getElementById('addVehicleBtn');
+const vehicleModal = document.getElementById('vehicleModal');
+const vehicleForm = document.getElementById('vehicleForm');
+const closeBtn = document.querySelector('.close');
+const vehicleList = document.getElementById('vehicleList');
 
-// Load vehicles from localStorage on page load
 function loadVehicles() {
   const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+  
+  if (!vehicleList) return;
   vehicleList.innerHTML = '';
   
   if (vehicles.length === 0) {
@@ -37,49 +41,71 @@ function loadVehicles() {
     const div = document.createElement('div');
     div.className = 'card';
     div.innerHTML = `
-      <h3>${vehicle.year} ${vehicle.make} ${vehicle.model}</h3>
-      <p>License: ${vehicle.license || 'N/A'}</p>
+      <h3>${vehicle.vehicleYear} ${vehicle.vehicleMake} ${vehicle.vehicleModel}</h3>
+      <p><strong>License:</strong> ${vehicle.vehicleLicense}</p>
+      <p><strong>VIN:</strong> ${vehicle.vehicleVIN || 'N/A'}</p>
+      <p><strong>Mileage:</strong> ${vehicle.vehicleMileage} miles</p>
       <button onclick="deleteVehicle(${index})" class="delete-btn">Delete</button>
     `;
     vehicleList.appendChild(div);
   });
   
   // Update dashboard count
-  document.getElementById('total-vehicles').textContent = vehicles.length;
+  const totalVehiclesEl = document.getElementById('totalVehicles');
+  if (totalVehiclesEl) {
+    totalVehiclesEl.textContent = vehicles.length;
+  }
 }
 
-// Show form when clicking Add Vehicle
-addVehicleBtn.addEventListener('click', () => {
-  vehicleForm.style.display = 'block';
+// Show modal
+if (addVehicleBtn) {
+  addVehicleBtn.addEventListener('click', () => {
+    vehicleModal.style.display = 'block';
+  });
+}
+
+// Close modal
+if (closeBtn) {
+  closeBtn.addEventListener('click', () => {
+    vehicleModal.style.display = 'none';
+    vehicleForm.reset();
+  });
+}
+
+// Close modal if clicking outside
+window.addEventListener('click', (e) => {
+  if (e.target === vehicleModal) {
+    vehicleModal.style.display = 'none';
+    vehicleForm.reset();
+  }
 });
 
-// Hide form
-cancelBtn.addEventListener('click', () => {
-  vehicleForm.style.display = 'none';
-});
+// Save vehicle
+if (vehicleForm) {
+  vehicleForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+    
+    const newVehicle = {
+      vehicleMake: document.getElementById('vehicleMake').value,
+      vehicleModel: document.getElementById('vehicleModel').value,
+      vehicleYear: document.getElementById('vehicleYear').value,
+      vehicleLicense: document.getElementById('vehicleLicense').value,
+      vehicleVIN: document.getElementById('vehicleVIN').value,
+      vehicleMileage: document.getElementById('vehicleMileage').value
+    };
+    
+    vehicles.push(newVehicle);
+    localStorage.setItem('vehicles', JSON.stringify(vehicles));
+    
+    vehicleForm.reset();
+    vehicleModal.style.display = 'none';
+    loadVehicles();
+  });
+}
 
-// Save vehicle on form submit
-vehicleForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  
-  const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
-  
-  const newVehicle = {
-    make: document.getElementById('make').value,
-    model: document.getElementById('model').value,
-    year: document.getElementById('year').value,
-    license: document.getElementById('license').value
-  };
-  
-  vehicles.push(newVehicle);
-  localStorage.setItem('vehicles', JSON.stringify(vehicles));
-  
-  vehicleForm.reset();
-  vehicleForm.style.display = 'none';
-  loadVehicles(); // Refresh the list
-});
-
-// Delete vehicle function
+// Delete vehicle - must be global
 function deleteVehicle(index) {
   const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
   vehicles.splice(index, 1);
