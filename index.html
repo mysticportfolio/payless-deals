@@ -1,105 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payless Deals - Vehicle Tracker</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Payless Auto Ghana - All kinds of Cars for Sale in Accra and Beyond</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Buy and sell quality cars in Ghana. Best deals on Toyota, Honda, Hyundai, etc. Call 0538858862">
+  <style>
+    body { font-family: Arial, sans-serif; background: #121212; color: #eee; margin: 0; }
+   .container { max-width: 1200px; margin: auto; padding: 20px; }
+    header { background: #1e1e1e; padding: 15px 20px; border-bottom: 3px solid #d4af37; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+   .logo { display: flex; align-items: center; gap: 15px; }
+   .logo img { width: 50px; height: 50px; border-radius: 50%; }
+   .logo h1 { color: #d4af37; margin: 0; font-size: 24px; }
+   .contact-bar { font-size: 14px; }
+   .contact-bar a { color: #d4af37; text-decoration: none; margin-left: 15px; }
+   .whatsapp-btn { background: #25D366; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; }
+    input, button, select, textarea { padding: 10px; margin: 5px 0; border-radius: 6px; border: 1px solid #333; background: #222; color: #eee; box-sizing: border-box; }
+    button { background: #d4af37; color: #121212; font-weight: bold; cursor: pointer; border: none; }
+    button:hover { background: #b8960c; }
+   .search-bar { background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap; }
+   .search-bar input, .search-bar select { flex: 1; min-width: 150px; }
+   .vehicle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+   .vehicle-card { background: #1e1e1e; border-radius: 8px; border: 1px solid #333; overflow: hidden; position: relative; }
+   .featured-badge { position: absolute; top: 10px; right: 10px; background: #d4af37; color: #121212; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+   .vehicle-card img { width: 100%; height: 200px; object-fit: cover; }
+   .vehicle-info { padding: 15px; }
+   .price { color: #d4af37; font-size: 22px; font-weight: bold; margin: 5px 0; }
+   .call-btn { background: #007bff; width: 100%; margin-top: 10px; }
+   .hidden { display: none; }
+    #vehicle-form { background: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    footer { background: #1e1e1e; text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #333; }
+  </style>
 </head>
 <body>
-  <!-- Login Screen -->
-  <div id="loginScreen">
-    <div class="login-container">
-      <h1>Payless Deals</h1>
-      <h2>Login</h2>
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <button id="loginBtn" class="btn btn-primary">Login</button>
-      <button id="signupBtn" class="btn">Sign Up</button>
-      <p id="authError" style="color: red;"></p>
+  <header>
+    <div class="logo">
+      <img src="https://mysticportfolio.github.io/payless-deals/logo.jpg" alt="Payless Auto Ghana Logo">
+      <h1>PAYLESS AUTO GHANA</h1>
+    </div>
+    <div class="contact-bar">
+      <a href="tel:0538858862">Call: 0538858862</a>
+      <a href="https://wa.me/233257746659" class="whatsapp-btn" target="_blank">WhatsApp Us</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="auth-section">
+      <h2>Dealer Login</h2>
+      <input id="email" type="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
+      <button id="login-btn">Log In</button>
+      <button id="signup-btn">Sign Up</button>
+    </div>
+
+    <div id="app-section" class="hidden">
+      <div class="nav">
+        <button id="logout-btn">Log Out</button>
+        <span id="user-email"></span>
+        <button id="toggle-form-btn">+ Add Vehicle</button>
+      </div>
+
+      <div id="vehicle-form" class="hidden">
+        <h3 id="form-title">Add Vehicle</h3>
+        <input type="hidden" id="vehicle-id">
+        <input id="make" placeholder="Make: Toyota">
+        <input id="model" placeholder="Model: Corolla">
+        <input id="year" type="number" placeholder="Year">
+        <input id="price" type="number" placeholder="Price in GHS">
+        <input id="mileage" type="number" placeholder="Mileage">
+        <input id="location" placeholder="Location: Accra, Kumasi">
+        <textarea id="description" placeholder="Description + Phone number for buyers"></textarea>
+        <input id="image" type="file" accept="image/*" multiple>
+        <label><input type="checkbox" id="featured"> Mark as Featured - GHS 50</label>
+        <button id="save-vehicle-btn">Save Vehicle</button>
+        <button id="cancel-edit-btn">Cancel</button>
+      </div>
+
+      <div class="search-bar">
+        <input id="search-make" placeholder="Search Make: Toyota">
+        <select id="filter-year">
+          <option value="">Any Year</option>
+          <option value="2020">2020+</option>
+          <option value="2015">2015+</option>
+          <option value="2010">2010+</option>
+        </select>
+        <select id="filter-price">
+          <option value="">Any Price</option>
+          <option value="20000">Under GHS 20k</option>
+          <option value="50000">Under GHS 50k</option>
+          <option value="100000">Under GHS 100k</option>
+        </select>
+        <button id="search-btn">Search</button>
+      </div>
+
+      <h2>Latest Cars</h2>
+      <div id="vehicles-list" class="vehicle-grid"></div>
     </div>
   </div>
 
-  <!-- Main App -->
-  <div id="appScreen" style="display: none;">
-    <nav class="navbar">
-      <div class="nav-brand">Payless Deals</div>
-      <div class="nav-items">
-        <button class="nav-btn active" data-section="dashboard">Dashboard</button>
-        <button class="nav-btn" data-section="vehicles">Vehicles</button>
-        <button class="nav-btn" data-section="admin" id="adminTab" style="display: none;">Admin</button>
-      </div>
-      <button id="logoutBtn" class="btn">Logout</button>
-    </nav>
+  <footer>
+    <p><strong>Payless Auto Ghana</strong> - Best Car Deals in Ghana</p>
+    <p>Call: 0538858862 / 0257746659 | Email: Emmanuelcarlos680@gmail.com</p>
+    <p>Location: Accra, Ghana</p>
+  </footer>
 
-    <main>
-      <section id="dashboard" class="content-section">
-        <h1>Dashboard</h1>
-        <div class="stats">
-          <div class="card">
-            <h3>My Vehicles</h3>
-            <p class="stat-number" id="totalVehicles">0</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="vehicles" class="content-section" style="display: none;">
-        <div class="section-header">
-          <h2>My Vehicles</h2>
-          <button class="btn btn-primary" id="addVehicleBtn">+ Add Vehicle</button>
-        </div>
-        <div id="vehicleList" class="vehicle-grid" style="margin-top: 20px;"></div>
-        
-        <div id="vehicleModal" class="modal">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Add New Vehicle</h2>
-            <form id="vehicleForm">
-              <div class="form-group">
-                <label>Make</label>
-                <input type="text" id="vehicleMake" required>
-              </div>
-              <div class="form-group">
-                <label>Model</label>
-                <input type="text" id="vehicleModel" required>
-              </div>
-              <div class="form-group">
-                <label>Year</label>
-                <input type="number" id="vehicleYear" required>
-              </div>
-              <div class="form-group">
-                <label>License Plate</label>
-                <input type="text" id="vehicleLicense" required>
-              </div>
-              <div class="form-group">
-                <label>VIN</label>
-                <input type="text" id="vehicleVIN">
-              </div>
-              <div class="form-group">
-                
-<label>Mileage</label>
-              <input type="number" id="vehicleMileage" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Vehicle</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <section id="admin" class="content-section" style="display: none;">
-      <h1>Admin Dashboard</h1>
-      <p>Total Users: <span id="totalUsers">0</span></p>
-      <p>Total Vehicles: <span id="allVehiclesCount">0</span></p>
-      <h3>All Vehicles</h3>
-      <div id="allVehiclesList" class="vehicle-grid"></div>
-    </section>
-  </main>
-</div>
-
-<!-- Firebase SDKs - THIS PART IS MANDATORY -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
