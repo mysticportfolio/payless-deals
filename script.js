@@ -1,11 +1,10 @@
-// Your Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyBWTQ6l_Zp-GNiXw93oOrLAYAQjXEWgjW4",
+  apiKey: "AIzaSyBWT0Q1_Zp-GNxXw03oOrLAYAQiXEWgjN4",
   authDomain: "payless-deals.firebaseapp.com",
   projectId: "payless-deals",
   storageBucket: "payless-deals.firebasestorage.app",
-  messagingSenderId: "7077548051682",
-  appId: "1:7077548051682:web:43aa332a1f8c2c7c9d14e4b"
+  messagingSenderId: "707548051602",
+  appId: "1:707548051602:web:43aa333af8c2c3c9d14e4b"
 };
 
 // SET YOUR EMAIL HERE TO BECOME ADMIN
