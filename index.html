@@ -1,319 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payless Deals - Vehicle Maintenance Tracker</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payless Deals - Vehicle Tracker</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>🚗 
-                 PAYLESS DEALS</h1>
-            <p class="tagline">Professional Vehicle Maintenance Tracking</p>
-        </header>
-
-        <!-- Navigation -->
-        <nav class="navbar">
-            <button class="nav-btn active" data-section="dashboard">Dashboard</button>
-            <button class="nav-btn" data-section="vehicles">Vehicles</button>
-            <button class="nav-btn" data-section="maintenance">Maintenance</button>
-            <button class="nav-btn" data-section="reminders">Reminders</button>
-            <button class="nav-btn" data-section="reports">Reports</button>
-            <button class="nav-btn" data-section="settings">Settings</button>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="section active">
-                <div class="section-header">
-                    <h2>Dashboard</h2>
-                </div>
-                <div class="dashboard-grid">
-                    <div class="stat-card">
-                        <h3>Total Vehicles</h3>
-                        <p class="stat-number" id="totalVehicles">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Active Services</h3>
-                        <p class="stat-number" id="activeServices">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Pending Maintenance</h3>
-                        <p class="stat-number" id="pendingMaintenance">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Total Expenses</h3>
-                        <p class="stat-number" id="totalExpenses">$0</p>
-                    </div>
-                </div>
-
-                <div class="alerts-section">
-                    <h3>⚠️ Maintenance Alerts</h3>
-                    <div id="alertsList" class="alerts-list">
-                        <p class="empty-state">No pending maintenance alerts</p>
-                    </div>
-                </div>
-
-                <div class="recent-section">
-                    <h3>Recent Activity</h3>
-                    <div id="recentActivity" class="recent-list">
-                        <p class="empty-state">No recent activity</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Vehicles Section -->
-            <section id="vehicles" class="section">
-                <div class="section-header">
-                    <h2>Vehicles</h2>
-                    <button class="btn btn-primary" id="addVehicleBtn">+ Add Vehicle</button>
-                </div>
-                <div id="vehicleList" class="vehicle-grid" style="margin-top: 20px;"></div>
-                <!-- Vehicle Form Modal -->
-                <div id="vehicleModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Add New Vehicle</h2>
-                        <form id="vehicleForm">
-                            <div class="form-group">
-                                <label>Make</label>
-                                <input type="text" id="vehicleMake" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Model</label>
-                                <input type="text" id="vehicleModel" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Year</label>
-                                <input type="number" id="vehicleYear" min="1900" max="2099" required>
-                            </div>
-                            <div class="form-group">
-                                <label>License Plate</label>
-                                <input type="text" id="vehicleLicense" required>
-                            </div>
-                            <div class="form-group">
-                                <label>VIN (optional)</label>
-                                <input type="text" id="vehicleVIN">
-                            </div>
-                            <div class="form-group">
-                                <label>Current Mileage</label>
-                                <input type="number" id="vehicleMileage" min="0" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save Vehicle</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Vehicles List -->
-                <div id="vehiclesList" class="vehicles-grid">
-                    <p class="empty-state">No vehicles added yet</p>
-                </div>
-            </section>
-
-            <!-- Maintenance Section -->
-            <section id="maintenance" class="section">
-                <div class="section-header">
-                    <h2>Maintenance Records</h2>
-                    <button class="btn btn-primary" id="addMaintenanceBtn">+ Log Maintenance</button>
-                </div>
-
-                <!-- Maintenance Form Modal -->
-                <div id="maintenanceModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Log Maintenance Record</h2>
-                        <form id="maintenanceForm">
-                            <div class="form-group">
-                                <label>Vehicle</label>
-                                <select id="maintenanceVehicle" required>
-                                    <option value="">Select a vehicle</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Service Type</label>
-                                <select id="serviceType" required>
-                                    <option value="">Select service type</option>
-                                    <option value="Oil Change">Oil Change</option>
-                                    <option value="Tire Rotation">Tire Rotation</option>
-                                    <option value="Brake Service">Brake Service</option>
-                                    <option value="Air Filter">Air Filter Replacement</option>
-                                    <option value="Battery">Battery Service</option>
-                                    <option value="Inspection">Inspection</option>
-                                    <option value="Repair">Repair</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea id="serviceDescription" rows="3"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Date</label>
-                                <input type="date" id="serviceDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Mileage</label>
-                                <input type="number" id="serviceMileage" min="0" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Cost (GHS)</label>
-                                <input type="number" id="serviceCost" min="0" step="0.01">
-                            </div>
-                            <div class="form-group">
-                                <label>Next Service Due (miles)</label>
-                                <input type="number" id="nextServiceMiles" min="0">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save Record</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Maintenance Records List -->
-                <div id="maintenanceList" class="maintenance-list">
-                    <p class="empty-state">No maintenance records yet</p>
-                </div>
-            </section>
-
-            <!-- Reminders Section -->
-            <section id="reminders" class="section">
-                <div class="section-header">
-                    <h2>Service Reminders</h2>
-                    <button class="btn btn-primary" id="addReminderBtn">+ Add Reminder</button>
-                </div>
-
-                <!-- Reminder Modal -->
-                <div id="reminderModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Create Service Reminder</h2>
-                        <form id="reminderForm">
-                            <div class="form-group">
-                                <label>Vehicle</label>
-                                <select id="reminderVehicle" required>
-                                    <option value="">Select a vehicle</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Service Type</label>
-                                <select id="reminderType" required>
-                                    <option value="">Select service type</option>
-                                    <option value="Oil Change">Oil Change - Every 5,000 miles</option>
-                                    <option value="Tire Rotation">Tire Rotation - Every 7,500 miles</option>
-                                    <option value="Air Filter">Air Filter - Every 15,000 miles</option>
-                                    <option value="Cabin Filter">Cabin Filter - Every 15,000 miles</option>
-                                    <option value="Brake Inspection">Brake Inspection - Every 12,000 miles</option>
-                                    <option value="Coolant Flush">Coolant Flush - Every 30,000 miles</option>
-                                    <option value="Transmission Fluid">Transmission Fluid - Every 60,000 miles</option>
-                                    <option value="Battery Check">Battery Check - Every 3 years</option>
-                                    <option value="Custom">Custom Reminder</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Reminder Miles</label>
-                                <input type="number" id="reminderMiles" min="0" required placeholder="e.g., 5000">
-                            </div>
-                            <div class="form-group">
-                                <label>Reminder Frequency (days)</label>
-                                <input type="number" id="reminderFrequency" min="1" value="30" placeholder="Days between reminders">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Create Reminder</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div id="remindersList" class="reminders-list">
-                    <p class="empty-state">No reminders set</p>
-                </div>
-            </section>
-
-            <!-- Reports Section -->
-            <section id="reports" class="section">
-                <div class="section-header">
-                    <h2>Reports & Analytics</h2>
-                </div>
-                
-                <div class="reports-grid">
-                    <div class="report-card">
-                        <h3>Maintenance by Type</h3>
-                        <div id="maintenanceByType" class="report-content">
-                            <p class="empty-state">No data available</p>
-                        </div>
-                    </div>
-
-                    <div class="report-card">
-                        <h3>Monthly Expenses</h3>
-                        <div id="monthlyExpenses" class="report-content">
-                            <p class="empty-state">No data available</p>
-                        </div>
-                    </div>
-
-                    <div class="report-card">
-                        <h3>Vehicle Summary</h3>
-                        <div id="vehicleSummary" class="report-content">
-                            <p class="empty-state">No data available</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Settings Section -->
-            <section id="settings" class="section">
-                <div class="section-header">
-                    <h2>Settings & Export</h2>
-                </div>
-
-                <div class="settings-grid">
-                    <div class="settings-card">
-                        <h3>📥 Export Data</h3>
-                        <p>Download all your garage data as JSON</p>
-                        <button class="btn btn-primary" onclick="app.exportDataJSON()">Export as JSON</button>
-                    </div>
-
-                    <div class="settings-card">
-                        <h3>📊 Export CSV</h3>
-                        <p>Download maintenance records as CSV</p>
-                        <button class="btn btn-primary" onclick="app.exportDataCSV()">Export as CSV</button>
-                    </div>
-
-                    <div class="settings-card">
-                        <h3>📋 Export Summary Report</h3>
-                        <p>Download a detailed maintenance report</p>
-                        <button class="btn btn-primary" onclick="app.exportSummaryReport()">Export Report</button>
-                    </div>
-
-                    <div class="settings-card">
-                        <h3>⚠️ Clear All Data</h3>
-                        <p>Warning: This will delete all data permanently</p>
-                        <button class="btn btn-danger" onclick="app.clearAllData()">Clear Data</button>
-                    </div>
-                </div>
-
-                <div class="settings-info">
-                    <h3>Service Categories</h3>
-                    <p>Common maintenance intervals:</p>
-                    <ul class="categories-list">
-                        <li><strong>Oil Change:</strong> Every 5,000 miles</li>
-                        <li><strong>Tire Rotation:</strong> Every 7,500 miles</li>
-                        <li><strong>Air Filter:</strong> Every 15,000 miles</li>
-                        <li><strong>Brake Inspection:</strong> Every 12,000 miles</li>
-                        <li><strong>Coolant Flush:</strong> Every 30,000 miles</li>
-                        <li><strong>Transmission Fluid:</strong> Every 60,000 miles</li>
-                        <li><strong>Battery Check:</strong> Every 3 years</li>
-                    </ul>
-                </div>
-            </section>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>&copy; Payless deals. All rights reserved.</p>
-        </footer>
+  <!-- Login Screen -->
+  <div id="loginScreen">
+    <div class="login-container">
+      <h1>Payless Deals</h1>
+      <h2>Login</h2>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button id="loginBtn" class="btn btn-primary">Login</button>
+      <button id="signupBtn" class="btn">Sign Up</button>
+      <p id="authError" style="color: red;"></p>
     </div>
+  </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+  <!-- Main App -->
+  <div id="appScreen" style="display: none;">
+    <nav class="navbar">
+      <div class="nav-brand">Payless Deals</div>
+      <div class="nav-items">
+        <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+        <button class="nav-btn" data-section="vehicles">Vehicles</button>
+        <button class="nav-btn" data-section="admin" id="adminTab" style="display: none;">Admin</button>
+      </div>
+      <button id="logoutBtn" class="btn">Logout</button>
+    </nav>
+
+    <main>
+      <section id="dashboard" class="content-section">
+        <h1>Dashboard</h1>
+        <div class="stats">
+          <div class="card">
+            <h3>My Vehicles</h3>
+            <p class="stat-number" id="totalVehicles">0</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="vehicles" class="content-section" style="display: none;">
+        <div class="section-header">
+          <h2>My Vehicles</h2>
+          <button class="btn btn-primary" id="addVehicleBtn">+ Add Vehicle</button>
+        </div>
+        <div id="vehicleList" class="vehicle-grid" style="margin-top: 20px;"></div>
+        
+        <div id="vehicleModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Vehicle</h2>
+            <form id="vehicleForm">
+              <div class="form-group">
+                <label>Make</label>
+                <input type="text" id="vehicleMake" required>
+              </div>
+              <div class="form-group">
+                <label>Model</label>
+                <input type="text" id="vehicleModel" required>
+              </div>
+              <div class="form-group">
+                <label>Year</label>
+                <input type="number" id="vehicleYear" required>
+              </div>
+              <div class="form-group">
+                <label>License Plate</label>
+                <input type="text" id="vehicleLicense" required>
+              </div>
+              <div class="form-group">
+                <label>VIN</label>
+                <input type="text" id="vehicleVIN">
+              </div>
+              <div class="form-group">
+                <label>Mile
