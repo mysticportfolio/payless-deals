@@ -5,12 +5,12 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstati
 
 // PASTE YOUR REAL CONFIG HERE
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyBWT0Q1_Zp-GNxXw03oOrLAYAQiXEWgjN4",
   authDomain: "payless-deals.firebaseapp.com",
   projectId: "payless-deals",
-  storageBucket: "payless-deals.appspot.com",
+  storageBucket: "payless-deals.firebasestorage.app",
   messagingSenderId: "707548051602",
-  appId: "YOUR_APP_ID"
+  appId: "1:707548051602:web:43aa333af8c2c3c9d14e4b"
 };
 
 const ADMIN_EMAIL = "Emmanuelcarlos680@gmail.com";
