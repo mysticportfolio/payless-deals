@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payless Deals - Vehicle Tracker</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <!-- Login Screen -->
@@ -76,4 +76,30 @@
                 <input type="text" id="vehicleVIN">
               </div>
               <div class="form-group">
-                <label>Mile
+                
+<label>Mileage</label>
+              <input type="number" id="vehicleMileage" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Vehicle</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin" class="content-section" style="display: none;">
+      <h1>Admin Dashboard</h1>
+      <p>Total Users: <span id="totalUsers">0</span></p>
+      <p>Total Vehicles: <span id="allVehiclesCount">0</span></p>
+      <h3>All Vehicles</h3>
+      <div id="allVehiclesList" class="vehicle-grid"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Firebase SDKs - THIS PART IS MANDATORY -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
