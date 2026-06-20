@@ -1,117 +1,152 @@
-// Tab switching logic
-const navButtons = document.querySelectorAll('.nav-btn');
-const sections = document.querySelectorAll('.content-section');
+// Your Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyBWTQ6l_Zp-GNiXw93oOrLAYAQjXEWgjW4",
+  authDomain: "payless-deals.firebaseapp.com",
+  projectId: "payless-deals",
+  storageBucket: "payless-deals.firebasestorage.app",
+  messagingSenderId: "7077548051682",
+  appId: "1:7077548051682:web:43aa332a1f8c2c7c9d14e4b"
+};
 
-navButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    navButtons.forEach(btn => btn.classList.remove('active'));
-    button.classList.add('active');
-    
-    sections.forEach(section => section.style.display = 'none');
-    
-    const targetSection = button.getAttribute('data-section');
-    const targetEl = document.getElementById(targetSection);
-    if (targetEl) targetEl.style.display = 'block';
-  });
+// SET YOUR EMAIL HERE TO BECOME ADMIN
+const ADMIN_EMAIL = "benjamakwasi@gmail.com"; // Change this to YOUR email
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUser = null;
+
+// Auth state
+auth.onAuthStateChanged(user => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'block';
+    if (user.email === ADMIN_EMAIL) {
+      document.getElementById('adminTab').style.display = 'block';
+      loadAdminData();
+    }
+    loadUserVehicles();
+    setupNav();
+  } else {
+    document.getElementById('loginScreen').style.display = 'block';
+    document.getElementById('appScreen').style.display = 'none';
+  }
 });
 
-// Show dashboard by default
-const dashboard = document.getElementById('dashboard');
-if (dashboard) dashboard.style.display = 'block';
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  auth.signInWithEmailAndPassword(email, password)
+    .catch(err => document.getElementById('authError').textContent = err.message);
+});
 
-// VEHICLE MODAL LOGIC - matches your HTML IDs
+document.getElementById('signupBtn').addEventListener('click', () => {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  auth.createUserWithEmailAndPassword(email, password)
+    .catch(err => document.getElementById('authError').textContent = err.message);
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+
+function setupNav() {
+  const navButtons = document.querySelectorAll('.nav-btn');
+  const sections = document.querySelectorAll('.content-section');
+  navButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      navButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      sections.forEach(section => section.style.display = 'none');
+      document.getElementById(button.dataset.section).style.display = 'block';
+    });
+  });
+}
+
+function loadUserVehicles() {
+  db.collection('vehicles').where('userId', '==', currentUser.uid)
+    .onSnapshot(snapshot => {
+      const vehicleList = document.getElementById('vehicleList');
+      vehicleList.innerHTML = '';
+      document.getElementById('totalVehicles').textContent = snapshot.size;
+      if (snapshot.empty) {
+        vehicleList.innerHTML = '<p>No vehicles added yet.</p>';
+        return;
+      }
+      snapshot.forEach(doc => {
+        const v = doc.data();
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <h3>${v.vehicleYear} ${v.vehicleMake} ${v.vehicleModel}</h3>
+          <p><strong>License:</strong> ${v.vehicleLicense}</p>
+          <p><strong>VIN:</strong> ${v.vehicleVIN || 'N/A'}</p>
+          <p><strong>Mileage:</strong> ${v.vehicleMileage} miles</p>
+          <button onclick="deleteVehicle('${doc.id}')" class="delete-btn">Delete</button>
+        `;
+        vehicleList.appendChild(div);
+      });
+    });
+}
+
+function loadAdminData() {
+  db.collection('vehicles').onSnapshot(snapshot => {
+    const allList = document.getElementById('allVehiclesList');
+    allList.innerHTML = '';
+    document.getElementById('allVehiclesCount').textContent = snapshot.size;
+    const userEmails = new Set();
+    snapshot.forEach(doc => {
+      const v = doc.data();
+      userEmails.add(v.userEmail);
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <h3>${v.vehicleYear} ${v.vehicleMake} ${v.vehicleModel}</h3>
+        <p><strong>Owner:</strong> ${v.userEmail}</p>
+        <p><strong>License:</strong> ${v.vehicleLicense}</p>
+        <p><strong>VIN:</strong> ${v.vehicleVIN || 'N/A'}</p>
+        <p><strong>Mileage:</strong> ${v.vehicleMileage} miles</p>
+      `;
+      allList.appendChild(div);
+    });
+    document.getElementById('totalUsers').textContent = userEmails.size;
+  });
+}
+
 const addVehicleBtn = document.getElementById('addVehicleBtn');
 const vehicleModal = document.getElementById('vehicleModal');
 const vehicleForm = document.getElementById('vehicleForm');
 const closeBtn = document.querySelector('.close');
-const vehicleList = document.getElementById('vehicleList');
 
-function loadVehicles() {
-  const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
-  
-  if (!vehicleList) return;
-  vehicleList.innerHTML = '';
-  
-  if (vehicles.length === 0) {
-    vehicleList.innerHTML = '<p>No vehicles added yet.</p>';
-    return;
-  }
-
-  vehicles.forEach((vehicle, index) => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <h3>${vehicle.vehicleYear} ${vehicle.vehicleMake} ${vehicle.vehicleModel}</h3>
-      <p><strong>License:</strong> ${vehicle.vehicleLicense}</p>
-      <p><strong>VIN:</strong> ${vehicle.vehicleVIN || 'N/A'}</p>
-      <p><strong>Mileage:</strong> ${vehicle.vehicleMileage} miles</p>
-      <button onclick="deleteVehicle(${index})" class="delete-btn">Delete</button>
-    `;
-    vehicleList.appendChild(div);
-  });
-  
-  // Update dashboard count
-  const totalVehiclesEl = document.getElementById('totalVehicles');
-  if (totalVehiclesEl) {
-    totalVehiclesEl.textContent = vehicles.length;
-  }
-}
-
-// Show modal
-if (addVehicleBtn) {
-  addVehicleBtn.addEventListener('click', () => {
-    vehicleModal.style.display = 'block';
-  });
-}
-
-// Close modal
-if (closeBtn) {
-  closeBtn.addEventListener('click', () => {
-    vehicleModal.style.display = 'none';
-    vehicleForm.reset();
-  });
-}
-
-// Close modal if clicking outside
-window.addEventListener('click', (e) => {
+addVehicleBtn.addEventListener('click', () => vehicleModal.style.display = 'block');
+closeBtn.addEventListener('click', () => {
+  vehicleModal.style.display = 'none';
+  vehicleForm.reset();
+});
+window.addEventListener('click', e => {
   if (e.target === vehicleModal) {
     vehicleModal.style.display = 'none';
     vehicleForm.reset();
   }
 });
 
-// Save vehicle
-if (vehicleForm) {
-  vehicleForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
-    
-    const newVehicle = {
-      vehicleMake: document.getElementById('vehicleMake').value,
-      vehicleModel: document.getElementById('vehicleModel').value,
-      vehicleYear: document.getElementById('vehicleYear').value,
-      vehicleLicense: document.getElementById('vehicleLicense').value,
-      vehicleVIN: document.getElementById('vehicleVIN').value,
-      vehicleMileage: document.getElementById('vehicleMileage').value
-    };
-    
-    vehicles.push(newVehicle);
-    localStorage.setItem('vehicles', JSON.stringify(vehicles));
-    
-    vehicleForm.reset();
-    vehicleModal.style.display = 'none';
-    loadVehicles();
+vehicleForm.addEventListener('submit', e => {
+  e.preventDefault();
+  db.collection('vehicles').add({
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    vehicleMake: document.getElementById('vehicleMake').value,
+    vehicleModel: document.getElementById('vehicleModel').value,
+    vehicleYear: document.getElementById('vehicleYear').value,
+    vehicleLicense: document.getElementById('vehicleLicense').value,
+    vehicleVIN: document.getElementById('vehicleVIN').value,
+    vehicleMileage: document.getElementById('vehicleMileage').value,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
-}
+  vehicleForm.reset();
+  vehicleModal.style.display = 'none';
+});
 
-// Delete vehicle - must be global
-function deleteVehicle(index) {
-  const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
-  vehicles.splice(index, 1);
-  localStorage.setItem('vehicles', JSON.stringify(vehicles));
-  loadVehicles();
+function deleteVehicle(id) {
+  db.collection('vehicles').doc(id).delete();
 }
-
-// Load vehicles when page opens
-loadVehicles();
