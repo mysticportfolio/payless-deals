@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 
 // SET YOUR EMAIL HERE TO BECOME ADMIN
-const ADMIN_EMAIL = "benjamakwasi@gmail.com"; // Change this to YOUR email
+const ADMIN_EMAIL = "mysticaljhunea11@gmail.com"; // Change this to YOUR email
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
