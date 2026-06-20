@@ -1,83 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Payless Auto Ghana - All kinds of Cars for Sale in Accra and Beyond</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Buy and sell quality cars in Ghana. Best deals on Toyota, Honda, Hyundai, etc. Call 0538858862">
-   <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payless Deals - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <img src="https://mysticportfolio.github.io/payless-deals/logo.jpg" alt="Payless Auto Ghana Logo">
-      <h1>PAYLESS AUTO GHANA</h1>
-    </div>
-    <div class="contact-bar">
-      <a href="tel:0538858862">Call: 0538858862</a>
-      <a href="https://wa.me/233257746659" class="whatsapp-btn" target="_blank">WhatsApp Us</a>
+  <header class="main-header">
+    <div class="header-content">
+      <div class="logo">
+        <img src="https://i.imgur.com/1Q9Z1Zm.jpg" alt="Payless Deals Logo">
+        <div>
+          <h1>🚗 PAYLESS DEALS</h1>
+          <p>Quality Cars at Unbeatable Prices</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="user-email"></span>
+        <button id="logout-btn" onclick="logout()" style="display:none;">Log Out</button>
+      </div>
     </div>
   </header>
 
-  <div class="container">
-    <div id="auth-section">
-      <h2>Dealer Login</h2>
-      <input id="email" type="email" placeholder="Email">
-      <input id="password" type="password" placeholder="Password">
-      <button id="login-btn">Log In</button>
-      <button id="signup-btn">Sign Up</button>
+  <nav class="tabs">
+    <div class="tabs-content">
+      <button class="tab active" onclick="showTab('dashboard')">Dashboard</button>
+      <button class="tab" onclick="showTab('vehicles')">Vehicles</button>
+      <button class="tab" onclick="showTab('add-vehicle')">Add Vehicle</button>
+      <button class="tab" onclick="showTab('dealer')">Dealer Login</button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Dashboard Tab -->
+    <div id="dashboard" class="tab-panel active">
+      <h2>Dashboard</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <p class="stat-label">TOTAL VEHICLES</p>
+          <p class="stat-number" id="total-vehicles">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">FEATURED</p>
+          <p class="stat-number" id="featured-vehicles">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">SOLD THIS MONTH</p>
+          <p class="stat-number">0</p>
+        </div>
+      </div>
+      <div class="alert-box">
+        <span>⚠️</span>
+        <p>Connect Firebase to start adding vehicles</p>
+      </div>
     </div>
 
-    <div id="app-section" class="hidden">
-      <div class="nav">
-        <button id="logout-btn">Log Out</button>
-        <span id="user-email"></span>
-        <button id="toggle-form-btn">+ Add Vehicle</button>
+    <!-- Vehicles Tab -->
+    <div id="vehicles" class="tab-panel">
+      <h2>Vehicle Inventory</h2>
+      <div id="vehicle-list">
+        <p style="color:#888;">No vehicles added yet.</p>
       </div>
+    </div>
 
-      <div id="vehicle-form" class="hidden">
-        <h3 id="form-title">Add Vehicle</h3>
-        <input type="hidden" id="vehicle-id">
-        <input id="make" placeholder="Make: Toyota">
-        <input id="model" placeholder="Model: Corolla">
-        <input id="year" type="number" placeholder="Year">
-        <input id="price" type="number" placeholder="Price in GHS">
-        <input id="mileage" type="number" placeholder="Mileage">
-        <input id="location" placeholder="Location: Accra, Kumasi">
+    <!-- Add Vehicle Tab -->
+    <div id="add-vehicle" class="tab-panel">
+      <h2>Add New Vehicle</h2>
+      <div class="form-card">
+        <input type="text" id="make" placeholder="Make: Toyota">
+        <input type="text" id="model" placeholder="Model: Corolla">
+        <input type="number" id="year" placeholder="Year: 2020">
+        <input type="number" id="price" placeholder="Price in GHS">
+        <input type="number" id="mileage" placeholder="Mileage">
+        <input type="text" id="location" placeholder="Location: Accra, Kumasi">
         <textarea id="description" placeholder="Description + Phone number for buyers"></textarea>
-        <input id="image" type="file" accept="image/*" multiple>
-        <label><input type="checkbox" id="featured"> Mark as Featured - GHS 50</label>
-        <button id="save-vehicle-btn">Save Vehicle</button>
-        <button id="cancel-edit-btn">Cancel</button>
+        <input type="file" id="vehicle-images" multiple>
+        <label style="display:flex;align-items:center;gap:10px;margin:15px 0;">
+          <input type="checkbox" id="featured" style="width:auto;">
+          Mark as Featured - GHS 50
+        </label>
+        <button onclick="saveVehicle()">Save Vehicle</button>
       </div>
-
-      <div class="search-bar">
-        <input id="search-make" placeholder="Search Make: Toyota">
-        <select id="filter-year">
-          <option value="">Any Year</option>
-          <option value="2020">2020+</option>
-          <option value="2015">2015+</option>
-          <option value="2010">2010+</option>
-        </select>
-        <select id="filter-price">
-          <option value="">Any Price</option>
-          <option value="20000">Under GHS 20k</option>
-          <option value="50000">Under GHS 50k</option>
-          <option value="100000">Under GHS 100k</option>
-        </select>
-        <button id="search-btn">Search</button>
-      </div>
-
-      <h2>Latest Cars</h2>
-      <div id="vehicles-list" class="vehicle-grid"></div>
     </div>
-  </div>
+
+    <!-- Dealer Login Tab -->
+    <div id="dealer" class="tab-panel">
+      <h2>Dealer Login</h2>
+      <div class="form-card">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Log In</button>
+        <button onclick="signup()" class="btn-secondary">Sign Up</button>
+      </div>
+    </div>
+  </main>
 
   <footer>
-    <p><strong>Payless Auto Ghana</strong> - Best Car Deals in Ghana</p>
-    <p>Call: 0538858862 / 0257746659 | Email: Emmanuelcarlos680@gmail.com</p>
-    <p>Location: Accra, Ghana</p>
+    <p>© 2026 Payless Deals. All rights reserved.</p>
   </footer>
 
-  <script type="module" src="script.js"></script>
+  <script>
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function login() { alert('Firebase login coming next'); }
+    function signup() { alert('Firebase signup coming next'); }
+    function logout() { alert('Logged out'); }
+    function saveVehicle() { alert('Connect Firebase Storage first to save cars'); }
+  </script>
 </body>
 </html>
